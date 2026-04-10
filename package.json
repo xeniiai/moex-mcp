@@ -39,11 +39,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cyberash/moex-mcp.git"
+    "url": "git+https://github.com/cyberash-dev/moex-mcp.git"
   },
-  "homepage": "https://github.com/cyberash/moex-mcp#readme",
+  "homepage": "https://github.com/cyberash-dev/moex-mcp#readme",
   "bugs": {
-    "url": "https://github.com/cyberash/moex-mcp/issues"
+    "url": "https://github.com/cyberash-dev/moex-mcp/issues"
   },
   "engines": {
     "node": ">=18.0.0"
