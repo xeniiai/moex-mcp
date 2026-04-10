@@ -1,0 +1,60 @@
+{
+  "name": "moex-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for Moscow Exchange (MOEX) ISS API — market data, history, candles, indices, currency rates, dividends and more",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "moex-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "moex",
+    "moscow-exchange",
+    "iss",
+    "market-data",
+    "stocks",
+    "bonds",
+    "futures",
+    "trading",
+    "finance",
+    "russia",
+    "claude",
+    "ai"
+  ],
+  "author": "cyberash <mail@cyberash.dev>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cyberash/moex-mcp.git"
+  },
+  "homepage": "https://github.com/cyberash/moex-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/cyberash/moex-mcp/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0",
+    "tsx": "^4.19.0"
+  }
+}
