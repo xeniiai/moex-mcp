@@ -7,6 +7,7 @@ export async function getBondYieldCurve(
   const queryParams: Record<string, string | number> = {};
   if (params.date) queryParams.date = params.date;
 
-  const response = await client.get(`/engines/${params.engine}/markets/zcyc`, queryParams);
+  // ISS path is /engines/{engine}/zcyc (not .../markets/zcyc)
+  const response = await client.get(`/engines/${params.engine}/zcyc`, queryParams);
   return response.yearyields ?? response.params ?? [];
 }

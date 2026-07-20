@@ -1,5 +1,6 @@
 import type { IssClientPort } from "../../shared/ports/iss-client.port.js";
 import { formatTable } from "../../shared/formatter.js";
+import { requireSecurityId } from "../../shared/security-id.js";
 import { getDividendsSchema } from "./schema.js";
 import { getDividends } from "./query.js";
 
@@ -11,7 +12,7 @@ export const getDividendsToolSchema = getDividendsSchema;
 
 export function createGetDividendsHandler(client: IssClientPort) {
   return async (args: Record<string, unknown>) => {
-    const { security } = getDividendsSchema.parse(args);
+    const security = requireSecurityId(getDividendsSchema.parse(args));
     const rows = await getDividends(client, security);
     return { content: [{ type: "text" as const, text: formatTable(rows, `Dividends: ${security}`) }] };
   };

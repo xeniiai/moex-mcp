@@ -1,5 +1,6 @@
 import type { IssClientPort } from "../../shared/ports/iss-client.port.js";
 import { formatTable } from "../../shared/formatter.js";
+import { requireSecurityId } from "../../shared/security-id.js";
 import { getHistoryDateRangeSchema } from "./schema.js";
 import { getHistoryDateRange } from "./query.js";
 
@@ -12,8 +13,9 @@ export const getHistoryDateRangeToolSchema = getHistoryDateRangeSchema;
 
 export function createGetHistoryDateRangeHandler(client: IssClientPort) {
   return async (args: Record<string, unknown>) => {
-    const { security, ...rest } = getHistoryDateRangeSchema.parse(args);
-    const rows = await getHistoryDateRange(client, { security, ...rest });
+    const params = getHistoryDateRangeSchema.parse(args);
+    const security = requireSecurityId(params);
+    const rows = await getHistoryDateRange(client, { ...params, security });
     return { content: [{ type: "text" as const, text: formatTable(rows, `Available date range: ${security}`) }] };
   };
 }

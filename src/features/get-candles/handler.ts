@@ -1,5 +1,6 @@
 import type { IssClientPort } from "../../shared/ports/iss-client.port.js";
 import { formatTable, truncateRows } from "../../shared/formatter.js";
+import { requireSecurityId } from "../../shared/security-id.js";
 import { getCandlesSchema } from "./schema.js";
 import { getCandles } from "./query.js";
 
@@ -13,10 +14,11 @@ export const getCandlesToolSchema = getCandlesSchema;
 export function createGetCandlesHandler(client: IssClientPort) {
   return async (args: Record<string, unknown>) => {
     const params = getCandlesSchema.parse(args);
-    const rows = await getCandles(client, params);
+    const security = requireSecurityId(params);
+    const rows = await getCandles(client, { ...params, security });
     const { rows: displayRows, truncated, total } = truncateRows(rows, 100);
 
-    let text = formatTable(displayRows, `Candles: ${params.security} (interval=${params.interval}min)`);
+    let text = formatTable(displayRows, `Candles: ${security} (interval=${params.interval}min)`);
     if (truncated) text += `\n\n*Showing 100 of ${total} candles.*`;
 
     return { content: [{ type: "text" as const, text }] };

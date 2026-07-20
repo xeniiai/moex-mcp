@@ -1,8 +1,15 @@
 # MOEX MCP Server
 
+Форк [cyberash-dev/moex-mcp](https://github.com/cyberash-dev/moex-mcp) с доработками под точечную аналитику (облигации / peer-сравнение).
+
 MCP-сервер для доступа к данным Московской Биржи через [ISS API](https://iss.moex.com/iss/reference/).
 
-Позволяет AI-ассистентам (Claude Code, Claude Desktop и др.) получать котировки, историю торгов, свечи, информацию о бумагах, индексах, валютных курсах и многое другое.
+## Отличия от upstream (v1.1)
+
+- `security` **или** `secid` — оба принимаются во всех tools по бумаге
+- `get_market_data` **требует** тикер (больше не отдаёт весь рынок); ответ по умолчанию — **JSON** с компактными `quotes` + `yields` (LAST, YIELD, DURATION, ZSPREAD / ZSPREADBP, …)
+- `get_security_info` / `get_bond_yield_curve` — JSON по умолчанию (`format=markdown` — старый вид)
+- исправлен путь ZCYC: `/engines/{engine}/zcyc` (upstream ходил в несуществующий `.../markets/zcyc`)
 
 ## Требования
 

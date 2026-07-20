@@ -1,7 +1,7 @@
 {
   "name": "moex-mcp",
-  "version": "1.0.0",
-  "description": "MCP server for Moscow Exchange (MOEX) ISS API — market data, history, candles, indices, currency rates, dividends and more",
+  "version": "1.1.0",
+  "description": "Fork of cyberash-dev/moex-mcp: MOEX ISS MCP with required SECID, JSON quotes/yields, fixed ZCYC",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

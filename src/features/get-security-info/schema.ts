@@ -1,5 +1,13 @@
 import { z } from "zod";
+import { securityIdFields } from "../../shared/security-id.js";
 
-export const getSecurityInfoSchema = z.object({
-  security: z.string().describe("Security ticker (e.g. 'SBER', 'GAZP', 'SU26238RMFS4')"),
-});
+export const getSecurityInfoSchema = z
+  .object({
+    ...securityIdFields,
+    format: z
+      .enum(["json", "markdown"])
+      .optional()
+      .default("json")
+      .describe("Response format (default json)"),
+  })
+  ;

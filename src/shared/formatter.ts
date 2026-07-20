@@ -1,3 +1,8 @@
+/** Machine-friendly JSON for agents (preferred over markdown tables). */
+export function formatJson(data: unknown): string {
+  return JSON.stringify(data, null, 2);
+}
+
 export function formatTable(rows: Record<string, unknown>[], title?: string): string {
   if (rows.length === 0) return title ? `## ${title}\n\nNo data available.` : "No data available.";
 

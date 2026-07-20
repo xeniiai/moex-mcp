@@ -1,5 +1,8 @@
 import { z } from "zod";
+import { securityIdFields } from "../../shared/security-id.js";
 
-export const getSecurityIndicesSchema = z.object({
-  security: z.string().describe("Security ticker (e.g. 'SBER', 'GAZP')"),
-});
+export const getSecurityIndicesSchema = z
+  .object({
+    ...securityIdFields,
+  })
+  ;

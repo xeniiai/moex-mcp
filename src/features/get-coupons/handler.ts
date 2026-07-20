@@ -1,5 +1,6 @@
 import type { IssClientPort } from "../../shared/ports/iss-client.port.js";
 import { formatTable, truncateRows } from "../../shared/formatter.js";
+import { requireSecurityId } from "../../shared/security-id.js";
 import { getCouponsSchema } from "./schema.js";
 import { getCoupons } from "./query.js";
 
@@ -11,7 +12,7 @@ export const getCouponsToolSchema = getCouponsSchema;
 
 export function createGetCouponsHandler(client: IssClientPort) {
   return async (args: Record<string, unknown>) => {
-    const { security } = getCouponsSchema.parse(args);
+    const security = requireSecurityId(getCouponsSchema.parse(args));
     const rows = await getCoupons(client, security);
     const { rows: displayRows, truncated, total } = truncateRows(rows, 100);
 
