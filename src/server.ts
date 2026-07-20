@@ -5,6 +5,7 @@ import { searchSecuritiesToolName, searchSecuritiesToolDescription, searchSecuri
 import { getSecurityInfoToolName, getSecurityInfoToolDescription, getSecurityInfoToolSchema, createGetSecurityInfoHandler } from "./features/get-security-info/handler.js";
 import { getSecurityIndicesToolName, getSecurityIndicesToolDescription, getSecurityIndicesToolSchema, createGetSecurityIndicesHandler } from "./features/get-security-indices/handler.js";
 import { getMarketDataToolName, getMarketDataToolDescription, getMarketDataToolSchema, createGetMarketDataHandler } from "./features/get-market-data/handler.js";
+import { getMarketDataBatchToolName, getMarketDataBatchToolDescription, getMarketDataBatchToolSchema, createGetMarketDataBatchHandler } from "./features/get-market-data-batch/handler.js";
 import { getOrderbookToolName, getOrderbookToolDescription, getOrderbookToolSchema, createGetOrderbookHandler } from "./features/get-orderbook/handler.js";
 import { getRecentTradesToolName, getRecentTradesToolDescription, getRecentTradesToolSchema, createGetRecentTradesHandler } from "./features/get-recent-trades/handler.js";
 import { getCandlesToolName, getCandlesToolDescription, getCandlesToolSchema, createGetCandlesHandler } from "./features/get-candles/handler.js";
@@ -25,7 +26,7 @@ import { getCouponsToolName, getCouponsToolDescription, getCouponsToolSchema, cr
 export function createServer(client: IssClientPort): McpServer {
   const server = new McpServer({
     name: "moex-mcp",
-    version: "1.1.0",
+    version: "1.2.0",
   });
 
   const tools = [
@@ -33,6 +34,7 @@ export function createServer(client: IssClientPort): McpServer {
     { name: getSecurityInfoToolName, description: getSecurityInfoToolDescription, schema: getSecurityInfoToolSchema, handler: createGetSecurityInfoHandler(client) },
     { name: getSecurityIndicesToolName, description: getSecurityIndicesToolDescription, schema: getSecurityIndicesToolSchema, handler: createGetSecurityIndicesHandler(client) },
     { name: getMarketDataToolName, description: getMarketDataToolDescription, schema: getMarketDataToolSchema, handler: createGetMarketDataHandler(client) },
+    { name: getMarketDataBatchToolName, description: getMarketDataBatchToolDescription, schema: getMarketDataBatchToolSchema, handler: createGetMarketDataBatchHandler(client) },
     { name: getOrderbookToolName, description: getOrderbookToolDescription, schema: getOrderbookToolSchema, handler: createGetOrderbookHandler(client) },
     { name: getRecentTradesToolName, description: getRecentTradesToolDescription, schema: getRecentTradesToolSchema, handler: createGetRecentTradesHandler(client) },
     { name: getCandlesToolName, description: getCandlesToolDescription, schema: getCandlesToolSchema, handler: createGetCandlesHandler(client) },

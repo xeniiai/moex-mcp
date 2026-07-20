@@ -6,4 +6,9 @@ export const searchSecuritiesSchema = z.object({
   engine: z.string().optional().describe("Filter by trading engine (e.g. 'stock', 'currency', 'futures')"),
   market: z.string().optional().describe("Filter by market (e.g. 'shares', 'bonds', 'index')"),
   is_trading: z.boolean().optional().describe("Only return actively traded securities"),
+  format: z
+    .enum(["json", "markdown"])
+    .optional()
+    .default("json")
+    .describe("Response format (default json)"),
 });

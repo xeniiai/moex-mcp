@@ -1,7 +1,7 @@
 {
   "name": "moex-mcp",
-  "version": "1.1.0",
-  "description": "Fork of cyberash-dev/moex-mcp: MOEX ISS MCP with required SECID, JSON quotes/yields, fixed ZCYC",
+  "version": "1.2.0",
+  "description": "Fork of cyberash-dev/moex-mcp: MOEX ISS MCP with JSON defaults, batch quotes, primary board, fixed ZCYC",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

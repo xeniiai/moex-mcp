@@ -4,12 +4,14 @@
 
 MCP-сервер для доступа к данным Московской Биржи через [ISS API](https://iss.moex.com/iss/reference/).
 
-## Отличия от upstream (v1.1)
+## Отличия от upstream (v1.2)
 
 - `security` **или** `secid` — оба принимаются во всех tools по бумаге
-- `get_market_data` **требует** тикер (больше не отдаёт весь рынок); ответ по умолчанию — **JSON** с компактными `quotes` + `yields` (LAST, YIELD, DURATION, ZSPREAD / ZSPREADBP, …)
-- `get_security_info` / `get_bond_yield_curve` — JSON по умолчанию (`format=markdown` — старый вид)
-- исправлен путь ZCYC: `/engines/{engine}/zcyc` (upstream ходил в несуществующий `.../markets/zcyc`)
+- `get_market_data` **требует** тикер; JSON с `quotes` + `yields` (LAST, YIELD, DURATION, ZSPREAD / ZSPREADBP, …)
+- `get_market_data_batch` — до 30 бумаг одним вызовом (peer-сравнение)
+- `search_securities` / `get_coupons` / `get_security_info` / `get_bond_yield_curve` — JSON по умолчанию (`format=markdown` — старый вид)
+- `get_security_info`: по умолчанию только **primary board** (`boards=primary`), без длинного списка РЕПО; `boards=traded|all` при необходимости
+- исправлен путь ZCYC: `/engines/{engine}/zcyc`
 
 ## Требования
 
@@ -53,8 +55,9 @@ claude mcp add moex node /path/to/moex-mcp/dist/index.js
 
 | Инструмент | Описание |
 | --- | --- |
-| `search_securities` | Поиск бумаг по тикеру, названию или ISIN |
-| `get_security_info` | Спецификация бумаги: ISIN, номинал, даты, площадки |
+| `search_securities` | Поиск бумаг по тикеру, названию или ISIN (JSON) |
+| `get_security_info` | Спецификация бумаги; по умолчанию primary board |
+| `get_market_data_batch` | Котировки/yields для списка SECID (до 30) |
 | `get_security_indices` | Индексы, в которые входит бумага |
 
 ### Рыночные данные
