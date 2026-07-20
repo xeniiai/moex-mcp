@@ -26,7 +26,7 @@ import { getCouponsToolName, getCouponsToolDescription, getCouponsToolSchema, cr
 export function createServer(client: IssClientPort): McpServer {
   const server = new McpServer({
     name: "moex-mcp",
-    version: "1.3.0",
+    version: "1.4.0",
   });
 
   const tools = [

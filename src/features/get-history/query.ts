@@ -1,10 +1,19 @@
 import type { IssClientPort } from "../../shared/ports/iss-client.port.js";
-import { fetchAllPages } from "../../shared/pagination.js";
+import { fetchPages, type PageResult } from "../../shared/pagination.js";
 
 export async function getHistory(
   client: IssClientPort,
-  params: { security: string; engine: string; market: string; board?: string; from?: string; till?: string; limit: number },
-): Promise<Record<string, unknown>[]> {
+  params: {
+    security: string;
+    engine: string;
+    market: string;
+    board?: string;
+    from?: string;
+    till?: string;
+    limit: number;
+    start: number;
+  },
+): Promise<PageResult> {
   let path: string;
 
   if (params.board) {
@@ -17,5 +26,5 @@ export async function getHistory(
   if (params.from) queryParams.from = params.from;
   if (params.till) queryParams.till = params.till;
 
-  return fetchAllPages(client, path, queryParams, "history", params.limit);
+  return fetchPages(client, path, queryParams, "history", params.limit, params.start);
 }
