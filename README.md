@@ -4,14 +4,26 @@
 
 MCP-сервер для доступа к данным Московской Биржи через [ISS API](https://iss.moex.com/iss/reference/).
 
-## Отличия от upstream (v1.2)
+## Отличия от upstream (v1.3)
 
+- Streamable HTTP: `TRANSPORT=streamable-http` (k8s), иначе stdio
 - `security` **или** `secid` — оба принимаются во всех tools по бумаге
-- `get_market_data` **требует** тикер; JSON с `quotes` + `yields` (LAST, YIELD, DURATION, ZSPREAD / ZSPREADBP, …)
-- `get_market_data_batch` — до 30 бумаг одним вызовом (peer-сравнение)
-- `search_securities` / `get_coupons` / `get_security_info` / `get_bond_yield_curve` — JSON по умолчанию (`format=markdown` — старый вид)
-- `get_security_info`: по умолчанию только **primary board** (`boards=primary`), без длинного списка РЕПО; `boards=traded|all` при необходимости
+- `get_market_data` **требует** тикер; JSON с `quotes` + `yields`
+- `get_market_data_batch` — до 30 бумаг одним вызовом
+- `search_securities` / `get_coupons` / `get_security_info` / `get_bond_yield_curve` — JSON по умолчанию
+- `get_security_info`: по умолчанию только **primary board**
 - исправлен путь ZCYC: `/engines/{engine}/zcyc`
+
+### HTTP (production)
+
+```bash
+TRANSPORT=streamable-http HOST=0.0.0.0 PORT=8030 MCP_PATH=/mcp npm start
+# health: GET /health
+# mcp:    POST/GET/DELETE /mcp
+```
+
+Docker image: `ghcr.io/xeniiai/moex-mcp` (CI на push в `main`).
+
 
 ## Требования
 
