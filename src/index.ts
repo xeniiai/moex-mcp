@@ -21,11 +21,6 @@ async function runHttp(): Promise<void> {
   const host = process.env.HOST ?? "0.0.0.0";
   const port = Number(process.env.PORT ?? "8030");
   const mcpPath = process.env.MCP_PATH ?? "/mcp";
-<<<<<<< HEAD
-
-  const transports: Record<string, StreamableHTTPServerTransport> = {};
-  const app = createMcpExpressApp();
-=======
   // Optional comma-separated Host allowlist (for reverse proxies).
   // Unset = bind 0.0.0.0 without host-header checks (SDK default is localhost-only).
   const allowedHosts = (process.env.ALLOWED_HOSTS ?? "")
@@ -37,7 +32,6 @@ async function runHttp(): Promise<void> {
   const app = createMcpExpressApp(
     allowedHosts.length > 0 ? { host: "0.0.0.0", allowedHosts } : { host: "0.0.0.0" },
   );
->>>>>>> 9b86980 (chore: drop hardcoded public host defaults)
 
   app.get("/health", (_req, res) => {
     res.status(200).json({ status: "ok" });
