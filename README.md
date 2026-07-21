@@ -18,11 +18,12 @@ MCP-сервер для доступа к данным Московской Би
 
 ```bash
 TRANSPORT=streamable-http HOST=0.0.0.0 PORT=8030 MCP_PATH=/mcp npm start
+# optional: ALLOWED_HOSTS=your.public.host,localhost
 # health: GET /health
 # mcp:    POST/GET/DELETE /mcp
 ```
 
-Docker image: `ghcr.io/xeniiai/moex-mcp` (CI на push в `main`).
+Docker image: `ghcr.io/<owner>/moex-mcp` (CI on push to `main`).
 
 
 ## Требования
