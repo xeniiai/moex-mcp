@@ -17,21 +17,83 @@ async function runStdio(): Promise<void> {
   await server.connect(transport);
 }
 
-async function runHttp(): Promise<void> {
-  const host = process.env.HOST ?? "0.0.0.0";
-  const port = Number(process.env.PORT ?? "8030");
-  const mcpPath = process.env.MCP_PATH ?? "/mcp";
-  // Optional comma-separated Host allowlist (for reverse proxies).
-  // Unset = bind 0.0.0.0 without host-header checks (SDK default is localhost-only).
+function createApp() {
   const allowedHosts = (process.env.ALLOWED_HOSTS ?? "")
     .split(",")
     .map((h) => h.trim())
     .filter(Boolean);
 
-  const transports: Record<string, StreamableHTTPServerTransport> = {};
-  const app = createMcpExpressApp(
+  return createMcpExpressApp(
     allowedHosts.length > 0 ? { host: "0.0.0.0", allowedHosts } : { host: "0.0.0.0" },
   );
+}
+
+/** Stateless Streamable HTTP — preferred behind reverse proxies (no session sticky needed). */
+async function runHttpStateless(): Promise<void> {
+  const host = process.env.HOST ?? "0.0.0.0";
+  const port = Number(process.env.PORT ?? "8030");
+  const mcpPath = process.env.MCP_PATH ?? "/mcp";
+  const app = createApp();
+
+  app.get("/health", (_req, res) => {
+    res.status(200).json({ status: "ok" });
+  });
+  app.get("/ready", (_req, res) => {
+    res.status(200).json({ status: "ready" });
+  });
+
+  app.post(mcpPath, async (req, res) => {
+    const server = createServer(new IssClient());
+    try {
+      const transport = new StreamableHTTPServerTransport({
+        sessionIdGenerator: undefined,
+      });
+      await server.connect(transport);
+      await transport.handleRequest(req, res, req.body);
+      res.on("close", () => {
+        void transport.close();
+        void server.close();
+      });
+    } catch (error) {
+      console.error("MCP POST error:", error);
+      if (!res.headersSent) {
+        res.status(500).json({
+          jsonrpc: "2.0",
+          error: { code: -32603, message: "Internal server error" },
+          id: null,
+        });
+      }
+    }
+  });
+
+  // Stateless mode has no SSE session stream
+  app.get(mcpPath, (_req, res) => {
+    res.status(405).json({
+      jsonrpc: "2.0",
+      error: { code: -32000, message: "Method not allowed." },
+      id: null,
+    });
+  });
+  app.delete(mcpPath, (_req, res) => {
+    res.status(405).json({
+      jsonrpc: "2.0",
+      error: { code: -32000, message: "Method not allowed." },
+      id: null,
+    });
+  });
+
+  app.listen(port, host, () => {
+    console.log(`moex-mcp listening on http://${host}:${port}${mcpPath} (stateless streamable-http)`);
+  });
+}
+
+/** Stateful sessions — local debugging only; needs sticky sessions behind a proxy. */
+async function runHttpStateful(): Promise<void> {
+  const host = process.env.HOST ?? "0.0.0.0";
+  const port = Number(process.env.PORT ?? "8030");
+  const mcpPath = process.env.MCP_PATH ?? "/mcp";
+  const transports: Record<string, StreamableHTTPServerTransport> = {};
+  const app = createApp();
 
   app.get("/health", (_req, res) => {
     res.status(200).json({ status: "ok" });
@@ -87,7 +149,11 @@ async function runHttp(): Promise<void> {
   app.get(mcpPath, async (req, res) => {
     const sessionId = req.headers["mcp-session-id"] as string | undefined;
     if (!sessionId || !transports[sessionId]) {
-      res.status(400).send("Invalid or missing session ID");
+      res.status(400).json({
+        jsonrpc: "2.0",
+        error: { code: -32000, message: "Invalid or missing session ID" },
+        id: null,
+      });
       return;
     }
     await transports[sessionId].handleRequest(req, res);
@@ -96,15 +162,28 @@ async function runHttp(): Promise<void> {
   app.delete(mcpPath, async (req, res) => {
     const sessionId = req.headers["mcp-session-id"] as string | undefined;
     if (!sessionId || !transports[sessionId]) {
-      res.status(400).send("Invalid or missing session ID");
+      res.status(400).json({
+        jsonrpc: "2.0",
+        error: { code: -32000, message: "Invalid or missing session ID" },
+        id: null,
+      });
       return;
     }
     await transports[sessionId].handleRequest(req, res);
   });
 
   app.listen(port, host, () => {
-    console.log(`moex-mcp listening on http://${host}:${port}${mcpPath} (transport=${transportMode})`);
+    console.log(`moex-mcp listening on http://${host}:${port}${mcpPath} (stateful streamable-http)`);
   });
+}
+
+async function runHttp(): Promise<void> {
+  const sessionMode = (process.env.MCP_SESSION_MODE ?? "stateless").toLowerCase();
+  if (sessionMode === "stateful") {
+    await runHttpStateful();
+  } else {
+    await runHttpStateless();
+  }
 }
 
 if (transportMode === "streamable-http" || transportMode === "http") {
