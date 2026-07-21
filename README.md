@@ -4,16 +4,15 @@
 
 MCP-сервер для доступа к данным Московской Биржи через [ISS API](https://iss.moex.com/iss/reference/).
 
-## Отличия от upstream (v1.4)
+## Отличия от upstream (v1.5)
 
 - Streamable HTTP: `TRANSPORT=streamable-http` (k8s), иначе stdio
-- `security` **или** `secid` — оба принимаются во всех tools по бумаге
-- `get_market_data` **требует** тикер; JSON с `quotes` + `yields`
-- `get_market_data_batch` — до 30 бумаг одним вызовом
-- `get_history` — JSON, auto-page ISS, `limit` default **1000** (max 2000), `start` / `next_start` для пагинации без нарезки дат; поля YIELD/DURATION/ZSPREAD/OFFERDATE
-- `search_securities` / `get_coupons` / `get_security_info` / `get_bond_yield_curve` — JSON по умолчанию
-- `get_security_info`: по умолчанию только **primary board**
-- исправлен путь ZCYC: `/engines/{engine}/zcyc`
+- `security` **или** `secid`; JSON defaults; ZCYC path fix
+- `get_history` / `get_history_batch` — limit 1000, `start`/`next_start`, `yield_quality=clean` (оферта/купон/MAD)
+- `get_market_data_batch`, `get_bond_spreads` (YTM/Z/G + точка ZCYC)
+- `get_cashflow_calendar` — купоны+оферты портфеля на 12–24 мес
+- `get_liquidity_stats` — оборот, дни без сделок, median range + live bid–ask
+
 
 ### HTTP (production)
 

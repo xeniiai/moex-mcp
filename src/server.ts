@@ -10,6 +10,7 @@ import { getOrderbookToolName, getOrderbookToolDescription, getOrderbookToolSche
 import { getRecentTradesToolName, getRecentTradesToolDescription, getRecentTradesToolSchema, createGetRecentTradesHandler } from "./features/get-recent-trades/handler.js";
 import { getCandlesToolName, getCandlesToolDescription, getCandlesToolSchema, createGetCandlesHandler } from "./features/get-candles/handler.js";
 import { getHistoryToolName, getHistoryToolDescription, getHistoryToolSchema, createGetHistoryHandler } from "./features/get-history/handler.js";
+import { getHistoryBatchToolName, getHistoryBatchToolDescription, getHistoryBatchToolSchema, createGetHistoryBatchHandler } from "./features/get-history-batch/handler.js";
 import { getHistoryDateRangeToolName, getHistoryDateRangeToolDescription, getHistoryDateRangeToolSchema, createGetHistoryDateRangeHandler } from "./features/get-history-date-range/handler.js";
 import { getHistoricalCandlesToolName, getHistoricalCandlesToolDescription, getHistoricalCandlesToolSchema, createGetHistoricalCandlesHandler } from "./features/get-historical-candles/handler.js";
 import { listEnginesToolName, listEnginesToolDescription, listEnginesToolSchema, createListEnginesHandler } from "./features/list-engines/handler.js";
@@ -19,14 +20,17 @@ import { getIndexAnalyticsToolName, getIndexAnalyticsToolDescription, getIndexAn
 import { getCurrencyRatesToolName, getCurrencyRatesToolDescription, getCurrencyRatesToolSchema, createGetCurrencyRatesHandler } from "./features/get-currency-rates/handler.js";
 import { getMarketTurnoversToolName, getMarketTurnoversToolDescription, getMarketTurnoversToolSchema, createGetMarketTurnoversHandler } from "./features/get-market-turnovers/handler.js";
 import { getBondYieldCurveToolName, getBondYieldCurveToolDescription, getBondYieldCurveToolSchema, createGetBondYieldCurveHandler } from "./features/get-bond-yield-curve/handler.js";
+import { getBondSpreadsToolName, getBondSpreadsToolDescription, getBondSpreadsToolSchema, createGetBondSpreadsHandler } from "./features/get-bond-spreads/handler.js";
 import { getFuturesOpenPositionsToolName, getFuturesOpenPositionsToolDescription, getFuturesOpenPositionsToolSchema, createGetFuturesOpenPositionsHandler } from "./features/get-futures-open-positions/handler.js";
 import { getDividendsToolName, getDividendsToolDescription, getDividendsToolSchema, createGetDividendsHandler } from "./features/get-dividends/handler.js";
 import { getCouponsToolName, getCouponsToolDescription, getCouponsToolSchema, createGetCouponsHandler } from "./features/get-coupons/handler.js";
+import { getCashflowCalendarToolName, getCashflowCalendarToolDescription, getCashflowCalendarToolSchema, createGetCashflowCalendarHandler } from "./features/get-cashflow-calendar/handler.js";
+import { getLiquidityStatsToolName, getLiquidityStatsToolDescription, getLiquidityStatsToolSchema, createGetLiquidityStatsHandler } from "./features/get-liquidity-stats/handler.js";
 
 export function createServer(client: IssClientPort): McpServer {
   const server = new McpServer({
     name: "moex-mcp",
-    version: "1.4.0",
+    version: "1.5.0",
   });
 
   const tools = [
@@ -39,6 +43,7 @@ export function createServer(client: IssClientPort): McpServer {
     { name: getRecentTradesToolName, description: getRecentTradesToolDescription, schema: getRecentTradesToolSchema, handler: createGetRecentTradesHandler(client) },
     { name: getCandlesToolName, description: getCandlesToolDescription, schema: getCandlesToolSchema, handler: createGetCandlesHandler(client) },
     { name: getHistoryToolName, description: getHistoryToolDescription, schema: getHistoryToolSchema, handler: createGetHistoryHandler(client) },
+    { name: getHistoryBatchToolName, description: getHistoryBatchToolDescription, schema: getHistoryBatchToolSchema, handler: createGetHistoryBatchHandler(client) },
     { name: getHistoryDateRangeToolName, description: getHistoryDateRangeToolDescription, schema: getHistoryDateRangeToolSchema, handler: createGetHistoryDateRangeHandler(client) },
     { name: getHistoricalCandlesToolName, description: getHistoricalCandlesToolDescription, schema: getHistoricalCandlesToolSchema, handler: createGetHistoricalCandlesHandler(client) },
     { name: listEnginesToolName, description: listEnginesToolDescription, schema: listEnginesToolSchema, handler: createListEnginesHandler(client) },
@@ -48,9 +53,12 @@ export function createServer(client: IssClientPort): McpServer {
     { name: getCurrencyRatesToolName, description: getCurrencyRatesToolDescription, schema: getCurrencyRatesToolSchema, handler: createGetCurrencyRatesHandler(client) },
     { name: getMarketTurnoversToolName, description: getMarketTurnoversToolDescription, schema: getMarketTurnoversToolSchema, handler: createGetMarketTurnoversHandler(client) },
     { name: getBondYieldCurveToolName, description: getBondYieldCurveToolDescription, schema: getBondYieldCurveToolSchema, handler: createGetBondYieldCurveHandler(client) },
+    { name: getBondSpreadsToolName, description: getBondSpreadsToolDescription, schema: getBondSpreadsToolSchema, handler: createGetBondSpreadsHandler(client) },
     { name: getFuturesOpenPositionsToolName, description: getFuturesOpenPositionsToolDescription, schema: getFuturesOpenPositionsToolSchema, handler: createGetFuturesOpenPositionsHandler(client) },
     { name: getDividendsToolName, description: getDividendsToolDescription, schema: getDividendsToolSchema, handler: createGetDividendsHandler(client) },
     { name: getCouponsToolName, description: getCouponsToolDescription, schema: getCouponsToolSchema, handler: createGetCouponsHandler(client) },
+    { name: getCashflowCalendarToolName, description: getCashflowCalendarToolDescription, schema: getCashflowCalendarToolSchema, handler: createGetCashflowCalendarHandler(client) },
+    { name: getLiquidityStatsToolName, description: getLiquidityStatsToolDescription, schema: getLiquidityStatsToolSchema, handler: createGetLiquidityStatsHandler(client) },
   ];
 
   for (const tool of tools) {

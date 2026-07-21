@@ -27,6 +27,29 @@ export const getHistorySchema = z.object({
     .optional()
     .default(1000)
     .describe("Max rows to return after auto-paging ISS (default 1000, max 2000)"),
+  yield_quality: z
+    .enum(["raw", "clean"])
+    .optional()
+    .default("raw")
+    .describe(
+      "raw = keep ISS yields; clean = null YIELDCLOSE_QC near offer/coupon, zero-volume, MAD outliers (use for medians)",
+    ),
+  offer_window_days: z
+    .number()
+    .int()
+    .min(0)
+    .max(30)
+    .optional()
+    .default(7)
+    .describe("For yield_quality=clean: null yields within N days of offer (default 7)"),
+  coupon_window_days: z
+    .number()
+    .int()
+    .min(0)
+    .max(30)
+    .optional()
+    .default(3)
+    .describe("For yield_quality=clean: null yields within N days of coupon (default 3)"),
   format: z
     .enum(["json", "markdown"])
     .optional()
